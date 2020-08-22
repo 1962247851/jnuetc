@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport"
+          content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="description" content="江南大学团通社电子技术部用户注册"/>
+    <title>线上报修系统用户注册</title>
+    <link rel="icon" href="../static/images/logo.png" th:href="@{/images/logo.png}" type="image/x-icon"/>
+    <link rel="stylesheet" href="../static/layui/css/layui.css" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}"/>
+    <script src="../static/layui/layui.js" th:src="@{/layui/layui.js}"></script>
+    <script src="../static/js/jquery-3.4.1.js" th:src="@{/js/jquery-3.4.1.js}"></script>
+</head>
+<body class="layui-anim layui-anim-fadein">
+<script type="text/javascript">
+    let projectName = ""
+</script>
+<div class="layui-header header">
+
+    <div class="layui-container">
+        <div style="float: left; margin-top: 15px">
+            <img src="../static/images/logo.png" th:src="@{/images/logo.png}" style="width: 40px" alt="">
+        </div>
+
+        <div style="float: right; margin-top: 15px">
+            <p style="font-size: 18px; font-weight: bold">江南大学团通社</p>
+            <p style="font-size: 13px; line-height: 13px">电子技术部</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="layui-container">
+
+    <div class="layui-row">
+
+        <div style="margin-top: 15px">
+            <div style="float: left; margin-top: 8px">
+                <p style="font-size: 20px">线上报修系统用户注册</p>
+            </div>
+
+            <div style="float: right">
+                <div class="icon">
+                    <i class="layui-icon" style="font-size: 38px; color: #2F4056;">&#xe857;</i>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="decoration" style="padding-top: 15px"></div>
+
+        <div id="hint">
+
+            <div class="notification-box-success layui-anim layui-anim-fadein" id="hint-success" style="display: none">
+
+                <div style="margin: 20px">
+                    <div>
+                        <div style="float: left">
+                            <p class="notification-box-title">注册成功</p>
+                        </div>
+                        <div style="float: right;margin-top: 4px">
+                            <a href="register" class="close-notification">x</a>
+                        </div>
+
+                    </div>
+
+                    <div class="decoration" style="padding-top: 10px;margin: 0 auto;border-color: #d9e9b9"></div>
+
+                    <div>
+                        <p class="notification-box-p">注册成功，欢迎加入团通社电子技术部</p>
+                        <p class="notification-box-p">现在你可以使用刚才输入的学号和密码登录以下客户端了</p>
+                        <br/>
+                        <p class="notification-box-p">
+                            <a style="font-style: italic" href="https://www.lanzous.com/b00e3ea4b">>接单APP（安卓端）</a>
+                        </p>
+                        <p class="notification-box-p" style="font-style: italic">>微信小程序（如果是安卓用户强烈建议使用上面的APP）</p>
+                        <img style="height: 200px;width: 200px" src="../static/images/wx.jpg"
+                             th:src="@{/images/wx.jpg}">
+                        <p class="notification-box-p">在使用过程中，对报修系统有任何问题或想法欢迎提出来</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="notification-box-error layui-anim layui-anim-fadein" id="hint-error" style="display: none">
+
+                <div style="margin: 20px">
+                    <div>
+                        <div style="float: left">
+                            <p class="notification-box-title">注册失败</p>
+                        </div>
+                        <div style="float: right;margin-top: 4px">
+                            <a href="register" class="close-notification">x</a>
+                        </div>
+
+                    </div>
+
+                    <div class="decoration" style="padding-top: 10px;margin: 0 auto;border-color: #c24747"></div>
+
+                    <div>
+                        <p class="notification-box-p" id="hint-error-tip"></p>
+                        <p class="notification-box-p">请尝试重新填写并提交</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <form class="layui-form" name="context" id="form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">邀请码：</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" maxlength="4" max="9999"
+                           type="text" pattern="[0-9]*"
+                           oninput="value=value.replace(/[^0-9.]+/,'');if (value.length>4) value=value.slice(0,4)"
+                           name="code" required id="code"
+                           placeholder="邀请码">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名：</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" maxlength="10" name="name" id="name" required placeholder="姓名">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">性别：</label>
+                <div class="layui-input-block">
+                    <select name="sex" id="sex" required>
+                        <option></option>
+                        <option>男</option>
+                        <option>女</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">园区：</label>
+                <div class="layui-input-block">
+                    <select name="group" id="group" required>
+                        <option></option>
+                        <option>北区</option>
+                        <option>南区</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">学号：</label>
+                <div class="layui-input-block">
+                    <input type="text" minlength="10" class="layui-input" maxlength="10" name="sno" id="sno" required
+                           placeholder="学号"
+                           oninput="value=value.replace(/[^0-9.]+/,'')">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码：</label>
+                <div class="layui-input-block">
+                    <input minlength="7" class="layui-input" maxlength="18" type="password" name="password"
+                           id="password" required
+                           placeholder="密码">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">确认密码：</label>
+                <div class="layui-input-block">
+                    <input minlength="7" class="layui-input" maxlength="18" type="password" name="password2"
+                           id="password2" required
+                           placeholder="再输入一遍密码">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="text-align: center">
+                    <button class="layui-btn custom-btn" id="submitButton"
+                            type="submit" lay-submit lay-filter="submitData">立即提交
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            function submitData(data) {
+                $.post(projectName + "/user/register",
+                    data,
+                    function (result) {
+                        // console.log(result);
+                        if (result.error === 1) {
+                            postSuccess()
+                        } else {
+                            postError(result.msg)
+                        }
+                    }
+                )
+            }
+        </script>
+
+        <div class="decoration"></div>
+
+    </div>
+</div>
+
+<div class="layui-footer footer">
+    <p>
+        Copyright &copy; 2017-2020
+    </p>
+    <p>江南大学团通社电子技术部</p>
+</div>
+</body>
+</html>
+
+<script>
+    let layer;
+    useModules();
+
+    function useModules() {
+        use_form();
+        use_layer();
+    }
+
+    function use_form() {
+        layui.use('form', function () {
+            var form = layui.form;
+            form.on('submit(submitData)', function (data) {
+                verify(JSON.stringify(data.field));
+                return false;
+            });
+        });
+    }
+
+    function use_layer() {
+        layui.use('layer', function () {
+            layer = layui.layer;
+        });
+    }
+
+    function verify(data) {
+        let json = JSON.parse(data);
+        let boolean = true;
+        let pwd = json["password"];
+        let pwd2 = json["password2"];
+        for (let item in json) {
+            if (json[item].length === 0) {
+                boolean = false;
+                document.getElementById(item).value = '';
+                window.scrollTo(pageX(document.getElementById(item).parentElement), pageY(document.getElementById(item).parentElement) - 50);
+                document.getElementById(item).style.backgroundColor = '#FFFFCC';
+                layer.msg('请补全表单', function () {
+                    document.getElementById(item).style.backgroundColor = 'white';
+                });
+                break;
+            } else {
+                if (item === "password2") {
+                    if (pwd.length >= 7 && pwd.length <= 18) {
+                        if (pwd2.indexOf(" ") !== -1) {
+                            window.scrollTo(pageX(document.getElementById(item).parentElement), pageY(document.getElementById(item).parentElement) - 50);
+                            document.getElementById(item).style.backgroundColor = '#FFFFCC';
+                            layer.msg('密码不能含有空格', function () {
+                                document.getElementById(item).style.backgroundColor = 'white';
+                            });
+                            boolean = false;
+                            break;
+                        } else if (pwd !== pwd2) {
+                            window.scrollTo(pageX(document.getElementById(item).parentElement), pageY(document.getElementById(item).parentElement) - 50);
+                            document.getElementById(item).style.backgroundColor = '#FFFFCC';
+                            layer.msg('两此输入的密码不一致', function () {
+                                document.getElementById(item).style.backgroundColor = 'white';
+                            });
+                            boolean = false;
+                            break;
+                        }
+                    } else {
+                        window.scrollTo(pageX(document.getElementById(item).parentElement), pageY(document.getElementById(item).parentElement) - 50);
+                        document.getElementById(item).style.backgroundColor = '#FFFFCC';
+                        layer.msg('密码长度7-18', function () {
+                            document.getElementById(item).style.backgroundColor = 'white';
+                        });
+                        boolean = false;
+                        break;
+                    }
+                } else if (item === "code") {
+                    if (json[item].indexOf(".") !== -1) {
+                        window.scrollTo(pageX(document.getElementById(item).parentElement), pageY(document.getElementById(item).parentElement) - 50);
+                        document.getElementById(item).style.backgroundColor = '#FFFFCC';
+                        layer.msg('邀请码不是整数', function () {
+                            document.getElementById(item).style.backgroundColor = 'white';
+                        });
+                        boolean = false;
+                        break;
+                    }
+                } else if (item === "sno") {
+                    if (json[item].indexOf(".") !== -1) {
+                        window.scrollTo(pageX(document.getElementById(item).parentElement), pageY(document.getElementById(item).parentElement) - 50);
+                        document.getElementById(item).style.backgroundColor = '#FFFFCC';
+                        layer.msg('学号不是整数', function () {
+                            document.getElementById(item).style.backgroundColor = 'white';
+                        });
+                        boolean = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (boolean) {
+            document.getElementById("submitButton").setAttribute("disabled", "disabled");
+            document.getElementById("submitButton").innerText = '注册中，请稍后';
+            submitData(json);
+        }
+    }
+
+    function postSuccess() {
+        window.scrollTo(0, 0);
+        document.getElementById('form').style.display = 'none';
+        document.getElementById('hint-success').style.display = 'block';
+        document.getElementById('hint-error').style.display = 'none';
+    }
+
+    function postError(errorMessage) {
+        document.getElementById('form').style.display = 'none';
+        document.getElementById('hint-success').style.display = 'none';
+        document.getElementById('hint-error').style.display = 'block';
+        document.getElementById('hint-error-tip').innerText = errorMessage;
+    }
+
+    function pageX(elem) {
+        return elem.offsetParent ? (elem.offsetLeft + pageX(elem.offsetParent)) : elem.offsetLeft;
+    }
+
+    function pageY(elem) {
+        return elem.offsetParent ? (elem.offsetTop + pageY(elem.offsetParent)) : elem.offsetTop;
+    }
+
+</script>

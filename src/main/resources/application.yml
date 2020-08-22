@@ -1,0 +1,21 @@
+spring:
+  thymeleaf:
+    mode: HTML
+
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+
+server:
+  servlet:
+    context-path: /
+  ssl:
+    key-store: classpath:server.jks
+    key-store-password: G6pdSChw
+    key-store-type: JKS
+    protocol: TLS
+  port: 444
+

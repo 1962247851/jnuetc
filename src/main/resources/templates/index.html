@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no">
+    <title>线上报修</title>
+    <meta name="description" content="江南大学团通社电子技术部线上报修"/>
+    <link rel="icon" href="../static/images/logo.png" th:href="@{/images/logo.png}" type="image/x-icon"/>
+    <link rel="stylesheet" href="../static/layui/css/layui.css" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}"/>
+    <script src="../static/layui/layui.js" th:src="@{/layui/layui.js}  "></script>
+</head>
+
+<body class="layui-anim layui-anim-fadein">
+
+<script type="text/javascript">
+
+    let photoFile = null;
+    let photoProcessing = false;
+    let posting = false;
+    let photoCount = 0;
+    let projectName = ""
+
+</script>
+<div class="layui-header header">
+
+    <div class="layui-container">
+        <div style="float: left;margin-top: 15px">
+            <img src="../static/images/logo.png" th:src="@{/images/logo.png}" style="width: 40px">
+        </div>
+
+        <div style="float: right; margin-top: 15px">
+            <p style="font-size: 18px;font-weight: bold">江南大学团通社</p>
+            <p style="font-size: 13px;line-height: 13px">电子技术部</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="layui-container">
+
+    <div class="layui-row">
+
+        <div style="margin-top: 15px">
+            <div style="float: left; margin-top: 8px">
+                <p style="font-size: 20px">线上报修系统</p>
+            </div>
+
+            <div style="float: right">
+                <div class="icon">
+                    <i class="layui-icon" style="font-size: 38px; color: #2F4056;">&#xe857;</i>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="decoration" style="padding-top: 15px"></div>
+
+        <div id="hint">
+
+            <div class="notification-box-success layui-anim layui-anim-fadein" id="hint-success" style="display: none">
+
+                <div style="margin: 20px">
+                    <div>
+                        <div style="float: left">
+                            <p class="notification-box-title">提交成功</p>
+                        </div>
+                        <div style="float: right;margin-top: 4px">
+                            <a href="index" class="close-notification">x</a>
+                        </div>
+
+                    </div>
+
+                    <div class="decoration" style="padding-top: 10px;margin: 0 auto;border-color: #d9e9b9"></div>
+
+                    <div>
+                        <p class="notification-box-p">申请已成功提交，我们将尽快联系你。</p>
+                        <p class="notification-box-p">如有其它需要咨询，可加我们的QQ群：459121889。
+                            <a href="https://jq.qq.com/?_wv=1027&amp;k=5TEC910" style="float: right">点此直接加群</a>
+                        </p>
+                        <p class="notification-box-p">感谢你对团通社电子技术部的信任和支持！</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="notification-box-error layui-anim layui-anim-fadein" id="hint-error" style="display: none">
+
+                <div style="margin: 20px">
+                    <div>
+                        <div style="float: left">
+                            <p class="notification-box-title">提交失败</p>
+                        </div>
+                        <div style="float: right;margin-top: 4px">
+                            <a href="index" class="close-notification">x</a>
+                        </div>
+
+                    </div>
+
+                    <div class="decoration" style="padding-top: 10px;margin: 0 auto;border-color: #c24747"></div>
+
+                    <div>
+                        <p class="notification-box-p">申请提交失败，可能是网络出现了故障。</p>
+                        <p class="notification-box-p">请尝试重新填写并提交或者加入我们的QQ群：459121889。
+                            <a href="https://jq.qq.com/?_wv=1027&amp;k=5TEC910" style="float: right">点此直接加群</a>
+                        </p>
+                        <p class="notification-box-p">意见投诉可发送至邮箱：1962247851@qq.com。
+                            <a href="mailto:1962247851@qq.com" style="float: right">点此直接发送邮件</a>
+                        </p>
+                        <p class="notification-box-p">感谢你对团通社电子技术部的信任和支持！</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <form class="layui-form" name="context" id="form">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名：</label>
+                <div class="layui-input-block">
+                    <input type="text" maxlength="20" class="layui-input" name="Name" id="Name" required
+                           placeholder="请输入姓名"
+                           autocomplete="off"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">手机号码：</label>
+                <div class="layui-input-block">
+                    <input type="text" maxlength="11" class="layui-input" name="Tel" id="Tel" required
+                           oninput="value=value.replace(/[^0-9.]+/,'')"
+                           placeholder="请输入手机号"
+                           autocomplete="off"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">QQ号码：</label>
+                <div class="layui-input-block">
+                    <input type="text" maxlength="10" class="layui-input" name="QQ" id="QQ" required placeholder="请输入QQ"
+                           oninput="value=value.replace(/[^0-9.]+/,'')"
+                           autocomplete="off"/>
+                </div>
+            </div>
+            <div class="layui-form-item" pane>
+                <label class="layui-form-label">所在园区：</label>
+                <div class="layui-input-block">
+                    <select name="Local" id="Local" required>
+                        <option></option>
+                        <optgroup label="北区">
+                            <option>杏园</option>
+                            <option>桃园</option>
+                            <option>桔园</option>
+                            <option>桂园</option>
+                            <option>梅园</option>
+                            <option>榴园</option>
+                            <option>李园</option>
+                            <option>竹园</option>
+                        </optgroup>
+                        <optgroup label="南区">
+                            <option>澈苑</option>
+                            <option>溪苑</option>
+                            <option>清苑</option>
+                            <option>涓苑</option>
+                            <option>润苑</option>
+                            <option>浩苑</option>
+                            <option>瀚苑</option>
+                            <option>鸿苑</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">学院：</label>
+                <div class="layui-input-block">
+                    <select name="College" id="College" required>
+                        <option></option>
+                        <option>物联网工程学院</option>
+                        <option>人工智能与计算机学院</option>
+                        <option>设计学院</option>
+                        <option>商学院</option>
+                        <option>机械学院</option>
+                        <option>环境与土木学院</option>
+                        <option>食品学院</option>
+                        <option>纺织科学与工程学院</option>
+                        <option>药学院</option>
+                        <option>外国语学院</option>
+                        <option>生物工程学院</option>
+                        <option>化学与材料工程学院</option>
+                        <option>理学院</option>
+                        <option>医学院</option>
+                        <option>人文学院</option>
+                        <option>法学院</option>
+                        <option>马克思主义学院</option>
+                        <option>北美学院</option>
+                        <option>纺织服装学院</option>
+                        <option>数字媒体学院</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">年级：</label>
+                <div class="layui-input-block">
+                    <select name="Grade" id="Grade" required>
+                        <option></option>
+                        <option>大一</option>
+                        <option>大二</option>
+                        <option>大三</option>
+                        <option>大四</option>
+                        <option>研究生</option>
+                        <option>其它</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">电脑型号：</label>
+                <div class="layui-input-block">
+                    <input type="text" maxlength="100" max class="layui-input" name="Model" id="Model" required
+                           placeholder="可在底面铭牌上找到，台式机请直接写台式机" autocomplete="off"/>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">详情描述：</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" name="Message" id="Message" required
+                              placeholder="请详细写出你的电脑如何故障，故障表现情况，对于蓝屏问题，请填写蓝屏时显示的错误代码，格式如：0xc000007b"
+                              autocomplete="off"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-input-block">故障图片（最多5张）：</label>
+            </div>
+            <div class="layui-upload-form" style="margin-bottom: 20px">
+                <label class="layui-text" id="fileTip"></label><br/>
+                <input class="layui-upload-button" type="file" name="photo" id="photo" multiple maxlength="5"
+                       accept="image/png,image/jpeg,image/jpg"><br/>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="text-align: center">
+                    <button class="layui-btn custom-btn" id="submitButton"
+                            type="submit" lay-submit lay-filter="submitData">立即提交
+                    </button>
+                </div>
+            </div>
+
+        </form>
+
+        <script type="text/javascript">
+            function submitData() {
+                if (photoProcessing) {
+                    alert("图片处理中，请耐心等待")
+                } else {
+                    if (checkForm()) {
+                        if (posting) {
+                            alert("数据上传中，请不要重复点击");
+                        } else {
+                            let formData = new FormData();
+                            formData.append("name", document.getElementById("Name").value);
+                            formData.append("tel", document.getElementById("Tel").value);
+                            formData.append("qq", document.getElementById("QQ").value);
+                            formData.append("local", document.getElementById("Local").value);
+                            formData.append("college", document.getElementById("College").value);
+                            formData.append("grade", document.getElementById("Grade").value);
+                            formData.append("model", document.getElementById("Model").value);
+                            formData.append("message", document.getElementById("Message").value);
+                            for (let i = 0; i < photoCount; i++) {
+                                formData.append("photo", photoFile[i]);
+                            }
+                            post(projectName + "/data/insert",
+                                formData,
+                                function success(httpRequest, result) {
+                                    // console.log(result);
+                                    postSuccess();
+                                },
+                                function error() {
+                                    postError();
+                                });
+                        }
+                    }
+                }
+            }
+
+            function isEmpty(obj) {
+                return typeof obj == "undefined" || obj == null || obj === "";
+            }
+
+            function checkForm() {
+                let name = document.getElementById("Name").value;
+                let Tel = document.getElementById("Tel").value;
+                let QQ = document.getElementById("QQ").value;
+                let Local = document.getElementById("Local").value;
+                let College = document.getElementById("College").value;
+                let Grade = document.getElementById("Grade").value;
+                let Model = document.getElementById("Model").value;
+                let Message = document.getElementById("Message").value;
+
+                return !(isEmpty(name) || isEmpty(Tel) || isEmpty(QQ) || isEmpty(Local) || isEmpty(College) || isEmpty(Grade) || isEmpty(Model) || isEmpty(Message));
+            }
+        </script>
+
+        <div class="decoration"></div>
+
+    </div>
+
+</div>
+
+<div class="layui-footer footer">
+    <p>Copyright &copy; 2017-2020</p>
+    <p>江南大学团通社电子技术部</p>
+</div>
+
+</body>
+</html>
+
+<script>
+    let layer;
+    useModules();
+
+    function useModules() {
+        use_form();
+        use_layer();
+    }
+
+    function use_form() {
+        layui.use('form', function () {
+            var form = layui.form;
+            form.on('submit(submitData)', function (data) {
+                verify(JSON.stringify(data.field));
+                return false;
+            });
+        });
+    }
+
+    function use_layer() {
+        layui.use('layer', function () {
+            layer = layui.layer;
+        });
+    }
+
+    function verify(data) {
+        let json = JSON.parse(data);
+        let errorTip = "";
+        let boolean = true;
+        for (let item in json) {
+            if (item !== "photo") {
+                if (json[item].length === 0) {
+                    document.getElementById(item).value = '';
+                    window.scrollTo(pageX(document.getElementById(item).parentElement), pageY(document.getElementById(item).parentElement) - 50);
+                    document.getElementById(item).style.backgroundColor = '#FFFFCC';
+                    layer.msg('请补全表单，以方便我们确认问题并联系你', function () {
+                        document.getElementById(item).style.backgroundColor = '#FFFFFF';
+                    });
+                    boolean = false;
+                    break;
+                } else if (item === "Tel") {
+                    if (json[item].indexOf(".") !== -1) {
+                        window.scrollTo(pageX(document.getElementById(item).parentElement), pageY(document.getElementById(item).parentElement) - 50);
+                        document.getElementById(item).style.backgroundColor = '#FFFFCC';
+                        layer.msg('电话格式错误', function () {
+                            document.getElementById(item).style.backgroundColor = '#FFFFFF';
+                        });
+                        boolean = false;
+                        break;
+                    }
+                } else if (item === "QQ") {
+                    if (json[item].indexOf(".") !== -1) {
+                        window.scrollTo(pageX(document.getElementById(item).parentElement), pageY(document.getElementById(item).parentElement) - 50);
+                        document.getElementById(item).style.backgroundColor = '#FFFFCC';
+                        layer.msg('QQ格式错误', function () {
+                            document.getElementById(item).style.backgroundColor = '#FFFFFF';
+                        });
+                        boolean = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (boolean) {
+            document.getElementById("submitButton").setAttribute("disabled", "disabled");
+            document.getElementById("submitButton").innerText = '数据上传中，请耐心等待';
+            submitData();
+        }
+    }
+
+    document.getElementById('photo').addEventListener('change', function (e) {
+        let fileTip = document.getElementById("fileTip");
+        let fileObjs = e.target.files;
+        // console.log('files', fileObjs);
+        if (fileObjs.length) {
+            if (fileObjs.length <= 5) {
+                photoProcessing = true;
+                fileTip.innerText = '图片处理中，请耐心等待';
+                compressFiles(fileObjs);
+            } else {
+                photoFile = null;
+                alert("图片数量最多为5个，你选择了" + fileObjs.length + "个，请重新选择");
+            }
+        } else {
+            photoFile = null;
+            fileTip.innerText = "";
+        }
+    });
+
+    function postSuccess() {
+        posting = false;
+        document.getElementById('form').style.display = 'none';
+        document.getElementById('hint-success').style.display = 'block';
+        document.getElementById('hint-error').style.display = 'none';
+    }
+
+    function postError() {
+        posting = false;
+        document.getElementById('form').style.display = 'none';
+        document.getElementById('hint-success').style.display = 'none';
+        document.getElementById('hint-error').style.display = 'block';
+    }
+
+    function pageX(elem) {
+        return elem.offsetParent ? (elem.offsetLeft + pageX(elem.offsetParent)) : elem.offsetLeft;
+    }
+
+    function pageY(elem) {
+        return elem.offsetParent ? (elem.offsetTop + pageY(elem.offsetParent)) : elem.offsetTop;
+    }
+
+    /**
+     * 压缩图片
+     * @param file input获取到的文件
+     * @param callback 回调函数，压缩完要做的事，例如ajax请求等。
+     */
+    function compressFile(file, callback) {
+        if (file.size && file.size >= 1024 * 1024 * 2) {
+            let quality = 0.5;
+            let fileObj = file;
+            let reader = new FileReader();
+            reader.readAsDataURL(fileObj); //转base64
+            reader.onload = function (e) {
+                let image = new Image();//新建一个img标签（还没嵌入DOM节点)
+                image.src = e.target.result;
+                image.onload = function () {
+                    let canvas = document.createElement('canvas'), // 新建canvas
+                        context = canvas.getContext('2d'),
+                        imageWidth = image.width,    //压缩后图片的大小
+                        imageHeight = image.height,
+                        data;
+                    canvas.width = imageWidth;
+                    canvas.height = imageHeight;
+                    context.drawImage(image, 0, 0, imageWidth, imageHeight);
+                    data = canvas.toDataURL('image/jpeg', quality); // 输出压缩后的base64
+                    let arr = data.split(','), mime = arr[0].match(/:(.*?);/)[1], // 转成blob
+                        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+                    while (n--) {
+                        u8arr[n] = bstr.charCodeAt(n);
+                    }
+                    // 转成file
+                    let newFile = new window.File([new Blob([u8arr], {type: mime})], 'test.jpg', {type: 'image/jpeg'})
+                    callback(newFile); // 回调
+                }
+            }
+        } else {
+            callback(file);
+        }
+    }
+
+    /**
+     * 压缩文件数组
+     * @param files 文件数组对象
+     */
+    function compressFiles(files) {
+        let newFiles = {};
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i];
+            compressFile(file, function (newFile) {
+                newFiles[i] = newFile;
+                if (i === files.length - 1) {
+                    photoFile = newFiles;
+                    photoCount = files.length;
+                    photoProcessing = false;
+                    document.getElementById("fileTip").innerText = '图片处理完成';
+                    // console.log('photoFile', photoFile)
+                }
+            })
+        }
+    }
+
+    /**
+     * post请求
+     * @param url URL
+     * @param formBody 表单数据，默认是multipart-formdata
+     * @param success 成功后的回调
+     * @param error 失败后的回调
+     */
+    function post(url, formBody, success, error) {
+        posting = true;
+        let httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
+        httpRequest.open('POST', url, true); //第二步：打开连接
+        // httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");//设置请求头 注：post方式必须设置请求头（在建立连接后设置请求头）
+        httpRequest.send(formBody);//发送请求 将情头体写在send中
+        //获取数据后的处理程序
+        httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+            if (httpRequest.readyState === 4 && httpRequest.status === 200) {//验证请求是否发送成功
+                success(httpRequest, httpRequest.responseText);
+            } else if (httpRequest.status !== 200) {
+                error();
+            }
+        };
+    }
+
+    /**
+     * 自动生成UUID，带"-"
+     * @returns {string} UUID
+     */
+    function generateUUID() {
+        var d = new Date().getTime();
+        if (window.performance && typeof window.performance.now === "function") {
+            d += performance.now(); //use high-precision timer if available
+        }
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+        uuid.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        return uuid;
+    }
+</script>

@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://----------/jiangnanuetc_dev?useTimezone=true&serverTimezone=GMT%2B8
+    username: ----------
+    password: ----------
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+logging:
+  level:
+    root: info
+    jn.mjz.aiot.maven.hellospringboot: debug
+  file:
+    path: ./logs
+    name: repair-dev.log
+
