@@ -5,3 +5,4 @@
 1. 后端：https://github.com/1962247851/jnuetc
 2. 安卓App：https://github.com/1962247851/jnuetc_android
 3. 安卓App（Kotlin）：https://github.com/1962247851/jnuetc_android_kotlin
+4. 微信小程序：https://github.com/1962247851/jnuetc_MiniProgram
