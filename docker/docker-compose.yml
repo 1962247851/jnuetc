@@ -1,0 +1,37 @@
+version: '2'
+services:
+  repair-nginx:
+    build:
+      context: ./nginx
+    restart: always
+    ports:
+      - "444:444"
+    volumes:
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+    container_name: repair-nginx
+    image: repair-nginx
+
+  repair-mysql:
+    build:
+      context: ./mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    hostname: repair-mysql
+    container_name: repair-mysql
+    image: repair-mysql
+
+  repair:
+    build:
+      context: ./repair
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./repair/data/pictures/dataDP:/opt/dataDP
+      - ./repair/data/pictures/dayDP:/opt/dayDP
+    hostname: repair
+    container_name: repair
+    image: repair

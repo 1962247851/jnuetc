@@ -10,7 +10,7 @@
     </parent>
     <groupId>jn.mjz.aiot.maven</groupId>
     <artifactId>repair</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <name>repair</name>
     <description>江南大学团通社电子技术部线上报修系统</description>
 
@@ -102,10 +102,34 @@
     </dependencies>
 
     <build>
+        <finalName>repair</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resource</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/docker/repair/app</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/target</directory>
+                                    <includes>
+                                        <include>repair.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
